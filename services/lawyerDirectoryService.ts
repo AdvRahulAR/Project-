@@ -547,7 +547,6 @@ const mockLawyers: LawyerProfile[] = [
     phone: '9567474977',
     bio: 'Comprehensive practice in Civil, Criminal, Family, and Consumer Law.',
     experienceYears: 5
-  }
   },
   {
     id: generateUUID(),
@@ -592,6 +591,7 @@ const mockLawyers: LawyerProfile[] = [
     phone: '9497457901',
     bio: 'Specialized in Criminal Law matters.',
     experienceYears: 5
+  }
 ];
 
 export const getLawyers = (): LawyerProfile[] => {
