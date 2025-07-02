@@ -138,8 +138,6 @@ export const DocumentationView: React.FC<DocumentationViewProps> = ({ onBackToCh
                   <li>• Key legal issues identification</li>
                   <li>• Possible remedies and follow-up actions</li>
                   <li>• Referenced legal sources and citations</li>
-                  <li>• Professional note organization</li>
-                  <li>• Smart title generation based on content</li>
                 </ul>
               </div>
             </div>
