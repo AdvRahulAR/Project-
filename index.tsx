@@ -66,47 +66,58 @@ function showInstallPromotion() {
   installBanner.innerHTML = `
     <div style="
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      top: 20px;
+      right: 20px;
+      background: rgba(220, 38, 38, 0.95);
+      backdrop-filter: blur(10px);
       color: white;
       padding: 12px 16px;
-      text-align: center;
-      font-size: 14px;
+      border-radius: 12px;
+      font-size: 13px;
       z-index: 9999;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transform: translateY(-100%);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transform: translateX(100%);
       transition: transform 0.3s ease-in-out;
+      max-width: 280px;
+      border: 1px solid rgba(255,255,255,0.1);
     ">
-      <div style="display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 600px; margin: 0 auto;">
-        <span>📱 Install Dharmabot for quick access to legal assistance</span>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-weight: 500; font-size: 14px;">📱 Install Dharmabot</span>
+          <button id="dismiss-install" style="
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+          " onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'">
+            ×
+          </button>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: rgba(255,255,255,0.9); line-height: 1.3;">
+          Quick access to legal assistance
+        </p>
         <button id="install-button" style="
           background: rgba(255,255,255,0.2);
           border: 1px solid rgba(255,255,255,0.3);
           color: white;
-          padding: 6px 12px;
-          border-radius: 6px;
+          padding: 8px 16px;
+          border-radius: 8px;
           font-size: 12px;
+          font-weight: 500;
           cursor: pointer;
-          transition: background 0.2s;
-        " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-          Install
-        </button>
-        <button id="dismiss-install" style="
-          background: transparent;
-          border: none;
-          color: rgba(255,255,255,0.8);
-          font-size: 18px;
-          cursor: pointer;
-          padding: 0;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        ">
-          ×
+          transition: all 0.2s;
+          width: 100%;
+        " onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)'">
+          Install Now
         </button>
       </div>
     </div>
@@ -118,7 +129,7 @@ function showInstallPromotion() {
   setTimeout(() => {
     const banner = document.getElementById('install-banner');
     if (banner) {
-      banner.style.transform = 'translateY(0)';
+      banner.style.transform = 'translateX(0)';
     }
   }, 1000);
   
@@ -138,7 +149,7 @@ function showInstallPromotion() {
       // Remove the banner
       const banner = document.getElementById('install-banner');
       if (banner) {
-        banner.style.transform = 'translateY(-100%)';
+        banner.style.transform = 'translateX(100%)';
         setTimeout(() => banner.remove(), 300);
       }
     }
@@ -148,7 +159,7 @@ function showInstallPromotion() {
   document.getElementById('dismiss-install')?.addEventListener('click', () => {
     const banner = document.getElementById('install-banner');
     if (banner) {
-      banner.style.transform = 'translateY(-100%)';
+      banner.style.transform = 'translateX(100%)';
       setTimeout(() => banner.remove(), 300);
     }
     // Store dismissal in localStorage to avoid showing again for a while
@@ -159,7 +170,7 @@ function showInstallPromotion() {
   setTimeout(() => {
     const banner = document.getElementById('install-banner');
     if (banner) {
-      banner.style.transform = 'translateY(-100%)';
+      banner.style.transform = 'translateX(100%)';
       setTimeout(() => banner.remove(), 300);
     }
   }, 10000);
