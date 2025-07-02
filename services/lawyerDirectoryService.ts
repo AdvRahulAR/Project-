@@ -547,50 +547,6 @@ const mockLawyers: LawyerProfile[] = [
     phone: '9567474977',
     bio: 'Comprehensive practice in Civil, Criminal, Family, and Consumer Law.',
     experienceYears: 5
-  },
-  {
-    id: generateUUID(),
-    name: 'Anjana PK',
-    practiceAreas: [
-      ServiceArea.CIVIL_LAW,
-      ServiceArea.CRIMINAL_LAW,
-      ServiceArea.FAMILY_LAW,
-      ServiceArea.MOTOR_ACCIDENT_CLAIMS
-    ],
-    city: 'Kannur',
-    state: 'Kerala',
-    email: 'anjanaagnes016@gmail.com',
-    phone: '9778283389',
-    bio: 'Experienced in Civil, Criminal, Family, and Motor Accident cases.',
-    experienceYears: 6
-  },
-  {
-    id: generateUUID(),
-    name: 'Sooraj K',
-    practiceAreas: [
-      ServiceArea.CRIMINAL_LAW,
-      ServiceArea.MOTOR_ACCIDENT_CLAIMS,
-      ServiceArea.CONSUMER_LAW,
-      ServiceArea.CIVIL_LAW,
-      ServiceArea.ARBITRATION_MEDIATION
-    ],
-    city: 'Vazhakkad',
-    state: 'Kerala',
-    email: 'Advsoorajk@gmail.com',
-    phone: '8606142042',
-    bio: 'Comprehensive practice in Criminal, Motor Accident, Consumer, Civil, Arbitration, and Customs matters.',
-    experienceYears: 8
-  },
-  {
-    id: generateUUID(),
-    name: 'Shiny Joseph',
-    practiceAreas: [ServiceArea.CRIMINAL_LAW],
-    city: 'Thrissur',
-    state: 'Kerala',
-    email: 'shinyanto308@gmail.com',
-    phone: '9497457901',
-    bio: 'Specialized in Criminal Law matters.',
-    experienceYears: 5
   }
 ];
 
