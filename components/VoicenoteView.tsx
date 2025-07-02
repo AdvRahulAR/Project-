@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { marked } from 'marked';
 import { Voicenote, VoicenoteInProgressData } from '../types';
-import { transcribeAudioWithGemini, polishLegalNoteWithGemini } from '../services/geminiService';
+import { transcribeAudioWithGemini, polishLegalNoteWithGemini, performLegalAnalysisWithGemini } from '../services/geminiService';
 import { getAllVoicenotes, saveVoicenote as saveVoicenoteToStorage, deleteVoicenote as deleteVoicenoteFromStorage } from '../services/voicenoteStorageService';
 import { Header } from './Header';
 import { Footer } from './Footer';
@@ -32,8 +32,8 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
 }) => {
   const [savedNotesList, setSavedNotesList] = useState<Voicenote[]>([]); // List of all saved notes
   // Local UI state for recording process
-  const [recordingState, setRecordingState] = useState<'idle' | 'requestingPermission' | 'recording' | 'processingAudio' | 'transcribing' | 'polishing'>('idle');
-  const [activeContentTab, setActiveContentTab] = useState<'polished' | 'raw'>('polished');
+  const [recordingState, setRecordingState] = useState<'idle' | 'requestingPermission' | 'recording' | 'processingAudio' | 'transcribing' | 'polishing' | 'analyzing'>('idle');
+  const [activeContentTab, setActiveContentTab] = useState<'polished' | 'analysis' | 'raw'>('polished');
   const [error, setError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -50,6 +50,7 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
   const dataArrayRef = useRef<Uint8Array | null>(null);
 
   const polishedNoteHtml = currentNoteData.polishedNoteMarkdown ? marked.parse(currentNoteData.polishedNoteMarkdown) as string : '';
+  const legalAnalysisHtml = currentNoteData.legalAnalysisMarkdown ? marked.parse(currentNoteData.legalAnalysisMarkdown) as string : '';
 
   useEffect(() => {
     marked.setOptions({ gfm: true, breaks: true });
@@ -202,6 +203,7 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
         title: currentNoteData?.title || 'New Recording', // Retain title if existing, else default
         rawTranscript: '',
         polishedNoteMarkdown: '',
+        legalAnalysisMarkdown: '',
         audioBlobURL: null,
         audioMimeType: null,
         durationSeconds: 0,
@@ -290,6 +292,7 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
           setRecordingState('polishing');
           const polishingResponse = await polishLegalNoteWithGemini(newRawTranscript);
           let newPolishedNote = '';
+          let newLegalAnalysis = '';
           let finalTitle = updatedDataAfterRecording.title;
 
           if (polishingResponse.suggestedTitle) {
@@ -304,15 +307,38 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
             newPolishedNote = polishingResponse.text;
           }
           
-          onCurrentNoteDataChange({ 
+          const dataAfterPolishing = { 
             ...updatedDataAfterRecording, 
             rawTranscript: newRawTranscript,
             polishedNoteMarkdown: newPolishedNote,
             title: finalTitle
-          });
+          };
+          onCurrentNoteDataChange(dataAfterPolishing);
+
+          // Perform legal analysis if polished note is available
+          if (newPolishedNote.trim()) {
+            setRecordingState('analyzing');
+            try {
+              const analysisResponse = await performLegalAnalysisWithGemini(newPolishedNote);
+              if (analysisResponse.text.startsWith("Error:")) {
+                console.warn("Legal analysis error:", analysisResponse.text);
+                newLegalAnalysis = `**Legal Analysis Error:** ${analysisResponse.text}`;
+              } else {
+                newLegalAnalysis = analysisResponse.text;
+              }
+            } catch (analysisError) {
+              console.error("Legal analysis failed:", analysisError);
+              newLegalAnalysis = `**Legal Analysis Error:** Failed to generate legal analysis. ${analysisError instanceof Error ? analysisError.message : 'Unknown error'}`;
+            }
+            
+            onCurrentNoteDataChange({ 
+              ...dataAfterPolishing,
+              legalAnalysisMarkdown: newLegalAnalysis
+            });
+          }
 
           setRecordingState('idle');
-          setActiveContentTab('polished');
+          setActiveContentTab('analysis'); // Switch to analysis tab after completion
         };
         reader.onerror = () => { setError("Failed to read audio blob."); setRecordingState('idle'); };
       };
@@ -331,7 +357,7 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
     }
   };
 
-  const isProcessing = ['processingAudio', 'transcribing', 'polishing'].includes(recordingState);
+  const isProcessing = ['processingAudio', 'transcribing', 'polishing', 'analyzing'].includes(recordingState);
   const displayDuration = recordingState === 'recording' ? currentNoteData.durationSeconds : (currentNoteData?.durationSeconds || 0);
 
   return (
@@ -423,13 +449,19 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
             <div className="flex border-b border-slate-300 dark:border-slate-600 mb-3">
               <button
                 onClick={() => setActiveContentTab('polished')}
-                className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 ${activeContentTab === 'polished' ? 'border-red-500 text-red-600 dark:text-red-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
+                className={`px-3 py-2 text-sm font-medium -mb-px border-b-2 ${activeContentTab === 'polished' ? 'border-red-500 text-red-600 dark:text-red-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
               >
                 Polished Note
               </button>
               <button
+                onClick={() => setActiveContentTab('analysis')}
+                className={`px-3 py-2 text-sm font-medium -mb-px border-b-2 ${activeContentTab === 'analysis' ? 'border-red-500 text-red-600 dark:text-red-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
+              >
+                Legal Analysis
+              </button>
+              <button
                 onClick={() => setActiveContentTab('raw')}
-                className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 ${activeContentTab === 'raw' ? 'border-red-500 text-red-600 dark:text-red-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
+                className={`px-3 py-2 text-sm font-medium -mb-px border-b-2 ${activeContentTab === 'raw' ? 'border-red-500 text-red-600 dark:text-red-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
               >
                 Raw Transcript
               </button>
@@ -442,6 +474,12 @@ export const VoicenoteView: React.FC<VoicenoteViewProps> = ({
               />
             )}
 
+            {activeContentTab === 'analysis' && (
+              <div
+                className="prose prose-sm md:prose-base dark:prose-invert max-w-none p-3 border border-slate-300 dark:border-slate-600 rounded-md bg-slate-50 dark:bg-slate-700 min-h-[150px] custom-scrollbar-thin"
+                dangerouslySetInnerHTML={{ __html: legalAnalysisHtml || '<p class="text-slate-400 italic">AI legal analysis will appear here after recording and processing...</p>' }}
+              />
+            )}
             {activeContentTab === 'raw' && (
               <textarea
                 id="rawTranscriptDisplay"

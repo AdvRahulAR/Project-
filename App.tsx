@@ -25,6 +25,7 @@ const defaultVoicenoteInProgressData = (): VoicenoteInProgressData => ({
   title: 'Untitled Note',
   rawTranscript: '',
   polishedNoteMarkdown: '',
+  legalAnalysisMarkdown: '',
   audioBlobURL: null,
   audioMimeType: null,
   durationSeconds: 0,

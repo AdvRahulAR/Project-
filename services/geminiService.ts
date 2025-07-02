@@ -122,6 +122,66 @@ TITLE: Client Meeting Summary - Project Alpha IP Strategy
 Process the following raw transcript:
 `;
 
+const LEGAL_ANALYSIS_SYSTEM_INSTRUCTION = `You are an expert legal analyst specializing in Indian law. Your task is to perform a comprehensive legal analysis based on a polished legal note or transcript provided by a legal professional (lawyer or judge).
+
+Your analysis should be thorough, well-researched, and grounded in current legal precedents and statutes. Use web search extensively to find relevant case law, recent judgments, statutory provisions, and legal commentary.
+
+**Analysis Structure (use Markdown formatting):**
+
+1. **Executive Summary**
+   - Brief overview of the key legal issues identified
+   - Primary legal implications and risks
+
+2. **Legal Issues Identified**
+   - List and analyze each distinct legal issue
+   - Categorize by area of law (e.g., Contract Law, Criminal Law, Constitutional Law)
+
+3. **Applicable Legal Framework**
+   - Relevant statutes, acts, and regulations
+   - Constitutional provisions if applicable
+   - Procedural rules and requirements
+
+4. **Case Law Analysis**
+   - Relevant Supreme Court and High Court judgments
+   - Recent precedents and their implications
+   - Conflicting judgments and their reconciliation
+
+5. **Legal Precedents & Citations**
+   - Key cases with proper citations
+   - Ratio decidendi of important judgments
+   - Distinguishing factors from current matter
+
+6. **Risk Assessment**
+   - Potential legal risks and liabilities
+   - Compliance issues
+   - Procedural pitfalls to avoid
+
+7. **Recommended Actions**
+   - Immediate steps to be taken
+   - Long-term legal strategy
+   - Documentation requirements
+
+8. **Recent Developments**
+   - Latest amendments to relevant laws
+   - Recent judicial pronouncements
+   - Regulatory changes affecting the matter
+
+**Research Guidelines:**
+- Prioritize Indian legal sources (Supreme Court, High Courts, tribunals)
+- Include recent judgments (last 2-3 years) where relevant
+- Reference authoritative legal databases and journals
+- Cite specific sections of acts and regulations
+- Provide proper legal citations in standard format
+
+**Output Requirements:**
+- Use clear, professional legal language
+- Provide specific citations with case names, court, and year
+- Include statutory references with section numbers
+- Maintain objectivity while highlighting critical issues
+- Format using proper Markdown with headings, lists, and emphasis
+
+Analyze the following legal content:`;
+
 const buildChatContents = (
   payload: ChatContextPayload,
   chatHistory: ChatMessage[] = []
@@ -794,5 +854,91 @@ export const performDeepResearch = async (query: string): Promise<AIResponse> =>
       errorMessage = `Gemini API research error: ${JSON.stringify(error)}`;
     }
     throw new Error(errorMessage);
+  }
+};
+
+export const performLegalAnalysisWithGemini = async (polishedNoteMarkdown: string): Promise<AIResponse> => {
+  if (!polishedNoteMarkdown.trim()) {
+    return { text: "Error: Polished note is empty, cannot perform legal analysis." };
+  }
+
+  const contentsForApi: Content[] = [{ role: 'user', parts: [{ text: polishedNoteMarkdown }] }];
+  
+  const apiConfig: GenerateContentParameters['config'] = {
+    systemInstruction: LEGAL_ANALYSIS_SYSTEM_INSTRUCTION,
+    tools: [{ googleSearch: {} }], // Enable Google Search grounding for legal research
+    temperature: 0.3, // Lower temperature for more focused analysis
+    topP: 0.9,
+    topK: 40,
+  };
+
+  const generateParams: GenerateContentParameters = {
+    model: GEMINI_TEXT_MODEL,
+    contents: contentsForApi,
+    config: apiConfig,
+  };
+
+  try {
+    console.log("Sending polished note to Gemini for legal analysis:", JSON.stringify({
+      model: generateParams.model,
+      config: generateParams.config,
+      noteLength: polishedNoteMarkdown.length
+    }, null, 2));
+
+    const response: GenerateContentResponse = await ai.models.generateContent(generateParams);
+    console.log("Raw Gemini response object for legal analysis:", JSON.stringify(response, null, 2));
+
+    if (!response) {
+      console.error("Gemini API call for legal analysis returned undefined/null response object.");
+      throw new Error("Gemini API returned an invalid response object for legal analysis.");
+    }
+
+    if (response.promptFeedback?.blockReason) {
+      const blockMessage = `Legal analysis was blocked. Reason: ${response.promptFeedback.blockReason}.`;
+      console.warn(blockMessage, response.promptFeedback);
+      return { text: `Error: ${blockMessage}` };
+    }
+    
+    if (response.candidates && response.candidates.length > 0) {
+        const mainCandidate = response.candidates[0];
+        if (mainCandidate.finishReason && mainCandidate.finishReason !== 'STOP' && mainCandidate.finishReason !== 'MAX_TOKENS') {
+            console.warn(`Gemini legal analysis candidate finished with reason: ${mainCandidate.finishReason}`, mainCandidate);
+            return {
+                text: `Error: Legal analysis was interrupted. Reason: ${mainCandidate.finishReason}.`
+            };
+        }
+    } else if (!response.promptFeedback?.blockReason) {
+        console.warn("Gemini returned no candidates for legal analysis and was not blocked. Full response:", response);
+        if (typeof response.text === 'string' && response.text.trim() !== "") {
+             console.log("Gemini response has text despite no candidates. Using text property for legal analysis.");
+        } else {
+            return { text: "Error: AI returned no actionable response or candidates for legal analysis." };
+        }
+    }
+    
+    const analysisContent = response.text;
+    const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks as GroundingChunk[] | undefined;
+    
+    console.log("Gemini legal analysis received. Text length:", analysisContent?.length);
+    if (sources) console.log("Legal analysis sources:", sources.length);
+
+    if (typeof analysisContent !== 'string' || analysisContent.trim() === "") {
+       if (!response.promptFeedback?.blockReason && !(response.candidates && response.candidates.some(c => c.finishReason !== 'STOP' && c.finishReason !== 'MAX_TOKENS'))) {
+        console.warn("Gemini legal analysis text is empty/not string. Full response:", response);
+      }
+      return { text: analysisContent || "Error: AI returned a response, but the legal analysis is empty." };
+    }
+
+    return { text: analysisContent, sources };
+
+  } catch (error) {
+    console.error("Gemini API call for legal analysis failed:", error);
+    let errorMessage = "Unknown error calling Gemini API for legal analysis.";
+    if (error instanceof Error) {
+      errorMessage = `Gemini API legal analysis error: ${error.message}`;
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = `Gemini API legal analysis error: ${JSON.stringify(error)}`;
+    }
+    return { text: `Error: ${errorMessage}` };
   }
 };
