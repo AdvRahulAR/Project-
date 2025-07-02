@@ -175,6 +175,7 @@ export interface Voicenote {
   audioMimeType: string | null;
   rawTranscript: string;
   polishedNoteMarkdown: string;
+  legalAnalysisMarkdown: string;
   durationSeconds: number;
 }
 
@@ -183,6 +184,7 @@ export interface VoicenoteInProgressData {
   title: string;
   rawTranscript: string;
   polishedNoteMarkdown: string;
+  legalAnalysisMarkdown: string;
   audioBlobURL: string | null;
   audioMimeType: string | null;
   durationSeconds: number;
