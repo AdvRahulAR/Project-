@@ -56,6 +56,7 @@ const AIMessageCard: React.FC<{
   message: AIResponseMessage; 
   currentUser: Omit<User, 'password'> | null;
   onNavigateToFindLawyer: () => void;
+}> = ({ message, currentUser, onNavigateToFindLawyer }) => {
   const [parsedHtml, setParsedHtml] = useState('');
   const [isSourcesExpanded, setIsSourcesExpanded] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
@@ -119,6 +120,8 @@ const AIMessageCard: React.FC<{
     }
     if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
     copyTimeoutRef.current = window.setTimeout(() => setCopyButtonText("Copy"), 2000);
+  }, [message.text]);
+
   const proseClasses = `prose prose-sm md:prose-base ai-message-enhanced-spacing max-w-none leading-relaxed prose-invert`;
 
   // Check if user is a citizen to show Find a Lawyer button
@@ -244,7 +247,6 @@ const SystemMessageCard: React.FC<{ message: SystemMessage }> = ({ message }) =>
     </div>
   );
 };
-
 
 export const ChatDisplay: React.FC<ChatDisplayProps> = ({ messages, currentUser, onNavigateToFindLawyer }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
