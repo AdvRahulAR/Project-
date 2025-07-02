@@ -94,30 +94,7 @@
         overflow-x: hidden; 
     }
 
-    /* Prose adjustments for chat display */
-    /* Dark theme prose styles (enforced as default) */
-    .prose-invert {
-      --tw-prose-body: theme(colors.slate[300]); 
-      --tw-prose-headings: theme(colors.white);
-      --tw-prose-lead: theme(colors.slate[400]); 
-      --tw-prose-links: theme(colors.red[400]);
-      --tw-prose-bold: theme(colors.white);
-      --tw-prose-counters: theme(colors.slate[400]);
-      --tw-prose-bullets: theme(colors.slate[400]);
-      --tw-prose-hr: theme(colors.slate[600]);
-      --tw-prose-quotes: theme(colors.slate[200]); 
-      --tw-prose-quote-borders: theme(colors.slate[600]);
-      --tw-prose-captions: theme(colors.slate[400]);
-      
-      /* Code variables for dark theme */
-      --tw-prose-code: theme(colors.red[300]); /* For inline code text */
-      --tw-prose-pre-code: var(--prose-code-highlight-text); /* For text inside <pre><code> */
-      --tw-prose-pre-bg: var(--prose-pre-bg);
-      --tw-prose-th-borders: theme(colors.slate[500]);
-      --tw-prose-td-borders: theme(colors.slate[600]);
-    }
-
-    /* Default prose styles (dark theme) */
+    /* Prose adjustments for chat display - Dark theme enforced */
     .prose {
       --tw-prose-body: theme(colors.slate[300]); 
       --tw-prose-headings: theme(colors.white);
@@ -138,8 +115,30 @@
       --tw-prose-th-borders: theme(colors.slate[500]);
       --tw-prose-td-borders: theme(colors.slate[600]);
     }
+
+    /* prose-invert class for compatibility */
+    .prose-invert {
+      --tw-prose-body: theme(colors.slate[300]); 
+      --tw-prose-headings: theme(colors.white);
+      --tw-prose-lead: theme(colors.slate[400]); 
+      --tw-prose-links: theme(colors.red[400]);
+      --tw-prose-bold: theme(colors.white);
+      --tw-prose-counters: theme(colors.slate[400]);
+      --tw-prose-bullets: theme(colors.slate[400]);
+      --tw-prose-hr: theme(colors.slate[600]);
+      --tw-prose-quotes: theme(colors.slate[200]); 
+      --tw-prose-quote-borders: theme(colors.slate[600]);
+      --tw-prose-captions: theme(colors.slate[400]);
+      
+      /* Code variables for dark theme */
+      --tw-prose-code: theme(colors.red[300]); /* For inline code text */
+      --tw-prose-pre-code: var(--prose-code-highlight-text); /* For text inside <pre><code> */
+      --tw-prose-pre-bg: var(--prose-pre-bg);
+      --tw-prose-th-borders: theme(colors.slate[500]);
+      --tw-prose-td-borders: theme(colors.slate[600]);
+    }
     
-    /* Custom styling for code blocks (applies to both light and dark via CSS vars) */
+    /* Custom styling for code blocks */
     .prose :where(pre):not(:where([class~="not-prose"] *)) {
       background-color: var(--tw-prose-pre-bg) !important;
       color: var(--prose-pre-text) !important; 
@@ -167,7 +166,6 @@
     .prose-sm :where(code):not(:where([class~="not-prose"] *))::after {
         content: ""; 
     }
-
 
     /* Custom increased paragraph spacing for AI messages */
     .ai-message-enhanced-spacing.prose-sm p {
@@ -233,7 +231,7 @@
       animation: subtlePulse 2s infinite ease-in-out;
     }
 
-    /* Quill editor dark theme styles */
+    /* Quill editor dark theme styles - enforced for all instances */
     .ql-snow .ql-toolbar,
     .ql-snow.dark-theme .ql-toolbar {
       border-color: theme(colors.slate.600) !important;
