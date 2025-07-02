@@ -123,7 +123,7 @@ export const DocumentationView: React.FC<DocumentationViewProps> = ({ onBackToCh
                 </h3>
                 <ul className="text-xs sm:text-sm text-purple-600 dark:text-purple-200 space-y-1 sm:space-y-2">
                   <li>• Voice-based interaction with natural language processing</li>
-                  <li>• Real-time voice recognition and legal support in multpile languages</li>
+                  <li>• Real-time voice recognition and legal support</li>
                   <li>• Beautiful 3D visualization of voice interactions</li>
                   <li>• Hands-free legal consultation</li>
                 </ul>
