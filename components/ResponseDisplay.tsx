@@ -132,7 +132,7 @@ const AIMessageCard: React.FC<{
 
   return (
     <div className="flex justify-start mb-3 sm:mb-4 group animate-fade-in-slide-up">
-      <div className="bg-slate-100 dark:bg-slate-700 p-2 sm:p-3 rounded-r-xl rounded-tl-xl shadow-md max-w-[95%] sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] xl:max-w-[70%]">
+      <div className="bg-slate-100 dark:bg-slate-700 p-2 sm:p-3 rounded-r-xl rounded-tl-xl shadow-md max-w-full">
         {parsedHtml ? (
           <div
             className={proseClasses}
