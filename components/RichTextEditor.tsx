@@ -50,6 +50,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
     // Always apply dark theme class
     if (quillRef.current) {
         quillRef.current.root.parentElement?.classList.add('dark-theme');
+    }
     const quill = quillRef.current;
     if (!quill) return;
 
