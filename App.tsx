@@ -51,6 +51,8 @@ const App: React.FC = () => {
 
   const [currentVoicenoteData, setCurrentVoicenoteData] = useState<VoicenoteInProgressData | null>(defaultVoicenoteInProgressData());
 
+  // PWA install state
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<any>(null);
   useEffect(() => {
     const handleResize = () => {
       const mobileCheck = window.innerWidth < 768;
@@ -62,6 +64,32 @@ const App: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [isMobile]);
 
+  // Handle PWA install prompt
+  useEffect(() => {
+    // Only handle install prompt if not in StackBlitz
+    if (!window.location.hostname.includes('stackblitz')) {
+      const handleBeforeInstallPrompt = (e: Event) => {
+        console.log('PWA install prompt triggered');
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        setDeferredInstallPrompt(e);
+      };
+
+      const handleAppInstalled = () => {
+        console.log('PWA was installed successfully');
+        setDeferredInstallPrompt(null);
+      };
+
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.addEventListener('appinstalled', handleAppInstalled);
+
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        window.removeEventListener('appinstalled', handleAppInstalled);
+      };
+    }
+  }, []);
   useEffect(() => {
     const loadedSessions = getAllChatSessions();
     setChatSessions(loadedSessions);
@@ -91,6 +119,23 @@ const App: React.FC = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  const handleInstallPWA = async () => {
+    if (deferredInstallPrompt) {
+      try {
+        // Show the install prompt
+        deferredInstallPrompt.prompt();
+        
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+        
+        // Clear the deferredPrompt
+        setDeferredInstallPrompt(null);
+      } catch (error) {
+        console.error('Error during PWA installation:', error);
+      }
+    }
+  };
   const addMessageToSessionState = useCallback((sessionId: string, message: ChatMessage, isNewSession: boolean = false, newSessionData?: Omit<ChatSession, 'messages'>) => {
     setChatSessions(prevSessions => {
       let updatedSessions;
@@ -452,6 +497,8 @@ const App: React.FC = () => {
           currentUser={currentUser}
           onNavigateToAuth={navigateToAuth}
           onLogout={handleLogout}
+          deferredInstallPrompt={deferredInstallPrompt}
+          onInstallPWA={handleInstallPWA}
         />
       )}
 

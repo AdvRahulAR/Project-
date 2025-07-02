@@ -18,6 +18,8 @@ interface ChatHistoryPanelProps {
   currentUser: Omit<User, 'password'> | null; 
   onNavigateToAuth: () => void; 
   onLogout: () => void; 
+  deferredInstallPrompt: any;
+  onInstallPWA: () => void;
 }
 
 export const ChatHistoryPanel: React.FC<ChatHistoryPanelProps> = ({
@@ -37,6 +39,8 @@ export const ChatHistoryPanel: React.FC<ChatHistoryPanelProps> = ({
   currentUser,
   onNavigateToAuth,
   onLogout,
+  deferredInstallPrompt,
+  onInstallPWA,
 }) => {
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState('');
@@ -218,6 +222,19 @@ export const ChatHistoryPanel: React.FC<ChatHistoryPanelProps> = ({
           </nav>
           
           <div className="mt-auto pt-2 sm:pt-3 border-t border-slate-300 dark:border-slate-700 space-y-2">
+            {/* PWA Install Button */}
+            {deferredInstallPrompt && !window.location.hostname.includes('stackblitz') && (
+              <button
+                onClick={onInstallPWA}
+                className={`${baseButtonClass} bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                <span>Install App</span>
+              </button>
+            )}
+            
             <div className="text-center text-[0.65rem] sm:text-xs text-slate-500 dark:text-slate-600 mb-1">
               {currentUser ? `Logged in as: ${currentUser.email} (${currentUser.profileType})` : "Chat history is stored locally."}
             </div>
