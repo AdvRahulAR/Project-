@@ -589,6 +589,7 @@ const mockLawyers: LawyerProfile[] = [
     state: 'Kerala',
     email: 'shinyanto308@gmail.com',
     phone: '9497457901',
+  }
 ];
 
 export const getLawyers = (): LawyerProfile[] => {
