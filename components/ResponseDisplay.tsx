@@ -32,7 +32,7 @@ const UserMessageCard: React.FC<{ message: UserQueryMessage }> = ({ message }) =
 
   return (
     <div className="flex justify-end mb-3 sm:mb-4 group animate-fade-in-slide-up">
-      <div className="bg-red-600 text-white p-2 sm:p-3 rounded-l-xl rounded-tr-xl shadow-md max-w-[85%] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+      <div className="bg-red-600 text-white p-2 sm:p-3 rounded-l-xl rounded-tr-xl shadow-md max-w-[90%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
         <div className="prose prose-sm md:prose-base prose-invert max-w-none text-white" dangerouslySetInnerHTML={{ __html: parsedHtml }} />
         {message.filesInfo && message.filesInfo.length > 0 && (
           <div className="mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-red-400/50">
@@ -132,7 +132,7 @@ const AIMessageCard: React.FC<{
 
   return (
     <div className="flex justify-start mb-3 sm:mb-4 group animate-fade-in-slide-up">
-      <div className="bg-slate-100 dark:bg-slate-700 p-2 sm:p-3 rounded-r-xl rounded-tl-xl shadow-md max-w-[85%] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+      <div className="bg-slate-100 dark:bg-slate-700 p-2 sm:p-3 rounded-r-xl rounded-tl-xl shadow-md max-w-[90%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
         {parsedHtml ? (
           <div
             className={proseClasses}
