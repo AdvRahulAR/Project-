@@ -580,6 +580,7 @@ const mockLawyers: LawyerProfile[] = [
     phone: '8606142042',
     bio: 'Comprehensive practice in Criminal, Motor Accident, Consumer, Civil, Arbitration, and Customs matters.',
     experienceYears: 8
+  }
 ];
 
 export const getLawyers = (): LawyerProfile[] => {
