@@ -742,24 +742,22 @@ export const performDeepResearch = async (query: string): Promise<AIResponse> =>
     if (response.promptFeedback?.blockReason) {
       const blockMessage = `Research was blocked. Reason: ${response.promptFeedback.blockReason}.`;
       console.warn(blockMessage, response.promptFeedback);
-      return { text: `Error: ${blockMessage}` };
+      throw new Error(blockMessage);
     }
 
     if (response.candidates && response.candidates.length > 0) {
       const mainCandidate = response.candidates[0];
       if (mainCandidate.finishReason && mainCandidate.finishReason !== 'STOP' && mainCandidate.finishReason !== 'MAX_TOKENS') {
         console.warn(`Gemini research candidate finished with reason: ${mainCandidate.finishReason}`, mainCandidate);
-        return {
-          text: `Error: Research was interrupted. Reason: ${mainCandidate.finishReason}.`
-        };
+        throw new Error(`Research was interrupted. Reason: ${mainCandidate.finishReason}.`);
       }
     } else if (!response.promptFeedback?.blockReason) {
       console.warn("Gemini returned no candidates for research and was not blocked. Full response:", response);
-      if (typeof response.text === 'string' && response.text.trim() !== "") {
-        console.log("Gemini response has text despite no candidates. Using text property for research.");
-      } else {
-        return { text: "Error: AI returned no actionable response or candidates for the research." };
+      // Check if response.text exists and is not empty
+      if (!response.text || typeof response.text !== 'string' || response.text.trim() === "") {
+        throw new Error("AI returned no actionable response or candidates for the research. Please try rephrasing your query or check if it's too broad.");
       }
+      console.log("Gemini response has text despite no candidates. Using text property for research.");
     }
 
     const text = response.text;
@@ -769,10 +767,8 @@ export const performDeepResearch = async (query: string): Promise<AIResponse> =>
     if (sources) console.log("Grounding sources:", sources.length);
 
     if (typeof text !== 'string' || text.trim() === "") {
-      if (!response.promptFeedback?.blockReason && !(response.candidates && response.candidates.some(c => c.finishReason !== 'STOP' && c.finishReason !== 'MAX_TOKENS'))) {
-        console.warn("Gemini research text is empty/not string. Full response:", response);
-      }
-      return { text: text || "Error: AI returned a response, but the research content is empty." };
+      console.warn("Gemini research text is empty/not string. Full response:", response);
+      throw new Error("AI returned a response, but the research content is empty. This may be due to the query being too broad or ambiguous. Please try a more specific research question.");
     }
 
     return { text, sources };
