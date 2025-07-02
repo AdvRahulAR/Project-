@@ -12,6 +12,7 @@ import { VoicenoteView } from './components/VoicenoteView';
 import { FindLawyerView } from './components/FindLawyerView';
 import { AuthView } from './components/AuthView';
 import { ResearchView } from './components/ResearchView';
+import { DocumentationView } from './components/DocumentationView';
 import { ProcessedFile, ChatSession, ChatMessage, UserQueryMessage, AIResponseMessage, DocumentInfoForAI, AIResponse, QueryPayload, AppView, User, UserProfileType, VoicenoteInProgressData, Voicenote } from './types';
 import { getAIResponse } from './services/geminiService';
 import { saveChatSession, getAllChatSessions, deleteChatSession as deleteSessionFromStorage } from './services/localStorageService';
@@ -299,6 +300,10 @@ const App: React.FC = () => {
     navigateToView('chat');
   };
 
+  const navigateToDocumentation = () => {
+    navigateToView('documentation');
+  };
+
   const navigateToAuth = () => {
     setCurrentView('auth');
     setIsSidebarOpen(false);
@@ -452,7 +457,7 @@ const App: React.FC = () => {
 
       {currentView === 'chat' && (
         <div className={mainContentFlexClass}>
-          <Header />
+          <Header onNavigateToDocumentation={navigateToDocumentation} />
           <main className="flex-grow flex flex-col" style={{minHeight:0}}>
             {error && !isLoading && <div className="p-2 sm:p-4 flex-shrink-0 animate-fade-in"><ErrorMessage message={error} /></div>}
 
@@ -524,6 +529,11 @@ const App: React.FC = () => {
       {currentView === 'findLawyer' && (
         <div className={mainContentFlexClass}>
           <FindLawyerView onBackToChat={navigateToChat} />
+        </div>
+      )}
+      {currentView === 'documentation' && (
+        <div className={mainContentFlexClass}>
+          <DocumentationView onBackToChat={navigateToChat} />
         </div>
       )}
     </div>

@@ -69,7 +69,7 @@ export enum LegalTask {
   EXTRACT_DEFINITIONS_OBLIGATIONS_FROM_DOCUMENT = "Extract Definitions & Obligations from Document",
 }
 
-export type AppView = 'chat' | 'documentDrafting' | 'voicenote' | 'findLawyer' | 'auth' | 'research';
+export type AppView = 'chat' | 'documentDrafting' | 'voicenote' | 'findLawyer' | 'auth' | 'research' | 'documentation';
 
 export enum FeedbackCategory {
   ACCURACY = 'ACCURACY',
