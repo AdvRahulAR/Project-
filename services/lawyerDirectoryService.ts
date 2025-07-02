@@ -562,7 +562,7 @@ const mockLawyers: LawyerProfile[] = [
     email: 'anjanaagnes016@gmail.com',
     phone: '9778283389',
     bio: 'Experienced in Civil, Criminal, Family, and Motor Accident cases.',
-    experienceYears: 6
+    experienceYears: 3
   },
   {
     id: generateUUID(),
@@ -578,8 +578,19 @@ const mockLawyers: LawyerProfile[] = [
     state: 'Kerala',
     email: 'Advsoorajk@gmail.com',
     phone: '8606142042',
-    bio: 'Comprehensive practice in Criminal, Motor Accident, Consumer, Civil, Arbitration, and Customs matters.',
-    experienceYears: 8
+    bio: 'Comprehensive practice in Criminal, Motor Accident, Consumer, Civil, and Arbitration law. Enrollment: K/909/18',
+    experienceYears: 7
+  },
+  {
+    id: generateUUID(),
+    name: 'Shiny Joseph',
+    practiceAreas: [ServiceArea.CRIMINAL_LAW],
+    city: 'Thrissur',
+    state: 'Kerala',
+    email: 'shinyanto308@gmail.com',
+    phone: '9497457901',
+    bio: 'Specialized in Criminal Law matters.',
+    experienceYears: 2
   }
 ];
 
