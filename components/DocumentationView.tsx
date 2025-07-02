@@ -113,7 +113,7 @@ export const DocumentationView: React.FC<DocumentationViewProps> = ({ onBackToCh
           {/* Voicenotes Features */}
           <div className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border border-purple-200 dark:border-purple-700">
             <h2 className="text-xl sm:text-2xl font-bold text-purple-800 dark:text-purple-300 mb-4 sm:mb-6">
-              🎤 Voicenotes - Audio Legal Assistant
+              🎤 Neeti - Audio Legal Assistant
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -123,11 +123,9 @@ export const DocumentationView: React.FC<DocumentationViewProps> = ({ onBackToCh
                 </h3>
                 <ul className="text-xs sm:text-sm text-purple-600 dark:text-purple-200 space-y-1 sm:space-y-2">
                   <li>• Voice-based interaction with natural language processing</li>
-                  <li>• Real-time voice recognition and transcription</li>
-                  <li>• AI-powered transcript polishing and formatting</li>
+                  <li>• Real-time voice recognition and legal support in multpile languages</li>
                   <li>• Beautiful 3D visualization of voice interactions</li>
                   <li>• Hands-free legal consultation</li>
-                  <li>• Audio playback with synchronized transcripts</li>
                 </ul>
               </div>
               
