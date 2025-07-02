@@ -589,9 +589,6 @@ const mockLawyers: LawyerProfile[] = [
     state: 'Kerala',
     email: 'shinyanto308@gmail.com',
     phone: '9497457901',
-    bio: 'Specialized in Criminal Law matters.',
-    experienceYears: 2
-  }
 ];
 
 export const getLawyers = (): LawyerProfile[] => {
