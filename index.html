@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,32 +24,14 @@
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
   <style>
     :root {
-      /* Light theme variables */
-      --body-bg-color: #f8fafc; /* slate-50 for light theme */
-      --pattern-color: rgba(226, 232, 240, 0.3); /* slate-200 with opacity for light theme */
-      --scrollbar-track-bg: #e2e8f0; /* slate-200 for light theme */
-      --scrollbar-thumb-bg: #94a3b8; /* slate-400 for light theme */
-      --scrollbar-thumb-hover-bg: #64748b; /* slate-500 for light theme */
-
-      /* Light Theme Prose Code Block Styles */
-      --prose-code-bg: theme(colors.slate.100); 
-      --prose-code-text: theme(colors.slate.800);
-      --prose-pre-bg: theme(colors.slate.100);
-      --prose-pre-text: theme(colors.slate.800);
-      --prose-inline-code-bg: theme(colors.slate.200);
-      --prose-inline-code-text: theme(colors.red.600);
-      --prose-code-highlight-text: theme(colors.red.600); 
-    }
-
-    html.dark {
-      /* Dark theme variables override light theme */
+      /* Dark theme variables (enforced as default) */
       --body-bg-color: #0f172a; /* slate-900 for dark theme */
       --pattern-color: rgba(30, 41, 59, 0.3); /* slate-800 with opacity for dark theme */
       --scrollbar-track-bg: #1e293b; /* slate-800 for dark theme */
       --scrollbar-thumb-bg: #4b5563; /* gray-600 for dark theme */
       --scrollbar-thumb-hover-bg: #6b7280; /* gray-500 for dark theme */
 
-      /* Dark Theme Prose Code Block Styles (via prose-invert) */
+      /* Dark Theme Prose Code Block Styles */
       --prose-code-bg: theme(colors.slate.800); 
       --prose-code-text: theme(colors.slate.200);
       --prose-pre-bg: theme(colors.slate.800);
@@ -113,29 +95,7 @@
     }
 
     /* Prose adjustments for chat display */
-    /* Light theme prose styles */
-    .prose {
-      --tw-prose-body: theme(colors.slate[700]); 
-      --tw-prose-headings: theme(colors.slate[900]);
-      --tw-prose-lead: theme(colors.slate[600]); 
-      --tw-prose-links: theme(colors.red[600]);
-      --tw-prose-bold: theme(colors.slate[900]);
-      --tw-prose-counters: theme(colors.slate[500]);
-      --tw-prose-bullets: theme(colors.slate[500]);
-      --tw-prose-hr: theme(colors.slate[300]);
-      --tw-prose-quotes: theme(colors.slate[900]); 
-      --tw-prose-quote-borders: theme(colors.slate[300]);
-      --tw-prose-captions: theme(colors.slate[600]);
-      
-      /* Code variables for light theme */
-      --tw-prose-code: theme(colors.red[600]); /* For inline code text */
-      --tw-prose-pre-code: var(--prose-code-highlight-text); /* For text inside <pre><code> */
-      --tw-prose-pre-bg: var(--prose-pre-bg);
-      --tw-prose-th-borders: theme(colors.slate[300]);
-      --tw-prose-td-borders: theme(colors.slate[200]);
-    }
-
-    /* Dark theme prose styles */
+    /* Dark theme prose styles (enforced as default) */
     .prose-invert {
       --tw-prose-body: theme(colors.slate[300]); 
       --tw-prose-headings: theme(colors.white);
@@ -149,7 +109,29 @@
       --tw-prose-quote-borders: theme(colors.slate[600]);
       --tw-prose-captions: theme(colors.slate[400]);
       
-      /* Code variables for dark theme (prose-invert) */
+      /* Code variables for dark theme */
+      --tw-prose-code: theme(colors.red[300]); /* For inline code text */
+      --tw-prose-pre-code: var(--prose-code-highlight-text); /* For text inside <pre><code> */
+      --tw-prose-pre-bg: var(--prose-pre-bg);
+      --tw-prose-th-borders: theme(colors.slate[500]);
+      --tw-prose-td-borders: theme(colors.slate[600]);
+    }
+
+    /* Default prose styles (dark theme) */
+    .prose {
+      --tw-prose-body: theme(colors.slate[300]); 
+      --tw-prose-headings: theme(colors.white);
+      --tw-prose-lead: theme(colors.slate[400]); 
+      --tw-prose-links: theme(colors.red[400]);
+      --tw-prose-bold: theme(colors.white);
+      --tw-prose-counters: theme(colors.slate[400]);
+      --tw-prose-bullets: theme(colors.slate[400]);
+      --tw-prose-hr: theme(colors.slate[600]);
+      --tw-prose-quotes: theme(colors.slate[200]); 
+      --tw-prose-quote-borders: theme(colors.slate[600]);
+      --tw-prose-captions: theme(colors.slate[400]);
+      
+      /* Code variables for dark theme */
       --tw-prose-code: theme(colors.red[300]); /* For inline code text */
       --tw-prose-pre-code: var(--prose-code-highlight-text); /* For text inside <pre><code> */
       --tw-prose-pre-bg: var(--prose-pre-bg);
@@ -252,51 +234,64 @@
     }
 
     /* Quill editor dark theme styles */
+    .ql-snow .ql-toolbar,
     .ql-snow.dark-theme .ql-toolbar {
       border-color: theme(colors.slate.600) !important;
     }
+    .ql-snow .ql-container,
     .ql-snow.dark-theme .ql-container {
       border-color: theme(colors.slate.600) !important;
       color: theme(colors.slate.100) !important;
       background-color: theme(colors.slate.800) !important;
     }
+    .ql-snow .ql-editor,
     .ql-snow.dark-theme .ql-editor {
       color: theme(colors.slate.100) !important;
     }
+    .ql-snow .ql-picker-label,
     .ql-snow.dark-theme .ql-picker-label {
       color: theme(colors.slate.100) !important;
     }
+    .ql-snow .ql-stroke,
     .ql-snow.dark-theme .ql-stroke {
       stroke: theme(colors.slate.400) !important;
     }
+    .ql-snow .ql-fill,
     .ql-snow.dark-theme .ql-fill {
       fill: theme(colors.slate.400) !important;
     }
+    .ql-snow .ql-picker-options,
     .ql-snow.dark-theme .ql-picker-options {
       background-color: theme(colors.slate.700) !important;
       border-color: theme(colors.slate.600) !important;
     }
+    .ql-snow .ql-picker-item:hover,
     .ql-snow.dark-theme .ql-picker-item:hover {
       color: theme(colors.red.400) !important;
     }
+    .ql-snow .ql-picker-item.ql-selected,
     .ql-snow.dark-theme .ql-picker-item.ql-selected {
       color: theme(colors.red.500) !important;
     }
+    .ql-snow .ql-tooltip,
     .ql-snow.dark-theme .ql-tooltip {
       background-color: theme(colors.slate.700) !important;
       border-color: theme(colors.slate.600) !important;
       color: theme(colors.slate.100) !important;
       box-shadow: 0px 0px 5px rgba(0,0,0,0.5) !important;
     }
+    .ql-snow .ql-tooltip input[type=text],
     .ql-snow.dark-theme .ql-tooltip input[type=text] {
       background-color: theme(colors.slate.800) !important;
       border-color: theme(colors.slate.500) !important;
       color: theme(colors.slate.100) !important;
     }
+    .ql-snow .ql-tooltip a.ql-action::before,
     .ql-snow.dark-theme .ql-tooltip a.ql-action::before {
       background-color: theme(colors.slate.600) !important;
     }
-     .ql-snow.dark-theme .ql-tooltip a.ql-action:hover::before {
+    .ql-snow .ql-tooltip a.ql-action:hover::before,
+    .ql-snow.dark-theme .ql-tooltip a.ql-action:hover::before {
       background-color: theme(colors.red.500) !important;
     }
     /* Utility for icon hover states in CollapsedSidebar */

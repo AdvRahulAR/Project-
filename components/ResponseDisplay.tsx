@@ -57,7 +57,6 @@ const AIMessageCard: React.FC<{
   currentUser: Omit<User, 'password'> | null;
   onNavigateToFindLawyer: () => void;
 }> = ({ message, currentUser, onNavigateToFindLawyer }) => {
-  const { theme } = useTheme();
   const [parsedHtml, setParsedHtml] = useState('');
   const [isSourcesExpanded, setIsSourcesExpanded] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
@@ -123,9 +122,7 @@ const AIMessageCard: React.FC<{
     copyTimeoutRef.current = window.setTimeout(() => setCopyButtonText("Copy"), 2000);
   }, [message.text]);
 
-  const proseClasses = `prose prose-sm md:prose-base ai-message-enhanced-spacing max-w-none leading-relaxed ${
-    theme === 'dark' ? 'prose-invert' : ''
-  }`;
+  const proseClasses = `prose prose-sm md:prose-base ai-message-enhanced-spacing max-w-none leading-relaxed prose-invert`;
 
   // Check if user is a citizen to show Find a Lawyer button
   const showFindLawyerButton = currentUser && currentUser.profileType === UserProfileType.CITIZEN;

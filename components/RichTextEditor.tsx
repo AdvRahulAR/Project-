@@ -47,13 +47,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
       }
     }
     
-    // Apply dark theme class if necessary
+    // Always apply dark theme class
     if (quillRef.current) {
-        if (document.documentElement.classList.contains('dark')) {
-            quillRef.current.root.parentElement?.classList.add('dark-theme');
-        } else {
-            quillRef.current.root.parentElement?.classList.remove('dark-theme');
-        }
+        quillRef.current.root.parentElement?.classList.add('dark-theme');
     }
   }, [placeholder]); // Effect for initialization and placeholder changes
 

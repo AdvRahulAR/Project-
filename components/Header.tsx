@@ -1,5 +1,4 @@
 import React from 'react';
-import { ThemeToggle } from './ThemeToggle';
 
 export const Header: React.FC = () => {
   return (
@@ -12,7 +11,6 @@ export const Header: React.FC = () => {
           </h1>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-3">
-          <ThemeToggle />
           <a
             href="https://dharmabot.in/"
             target="_blank"
