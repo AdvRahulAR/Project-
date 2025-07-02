@@ -17,15 +17,8 @@ root.render(
   </React.StrictMode>
 );
 
-// Helper function to detect StackBlitz environment
-const isStackBlitzEnvironment = (): boolean => {
-  return window.location.hostname.includes('stackblitz') || 
-         window.location.hostname.includes('webcontainer') ||
-         window.location.hostname.includes('stackblitz.io');
-};
-
 // Register Service Worker for PWA functionality
-if ('serviceWorker' in navigator && !isStackBlitzEnvironment()) {
+if ('serviceWorker' in navigator && !window.location.hostname.includes('stackblitz')) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
@@ -50,7 +43,7 @@ if ('serviceWorker' in navigator && !isStackBlitzEnvironment()) {
         console.error('Service Worker registration failed:', error);
       });
   });
-} else if (isStackBlitzEnvironment()) {
+} else if (window.location.hostname.includes('stackblitz')) {
   console.log('Service Worker registration skipped: Not supported in StackBlitz environment');
 }
 
@@ -58,7 +51,7 @@ if ('serviceWorker' in navigator && !isStackBlitzEnvironment()) {
 let deferredPrompt: any;
 
 // Only handle install prompt if not in StackBlitz
-if (!isStackBlitzEnvironment()) {
+if (!window.location.hostname.includes('stackblitz')) {
   window.addEventListener('beforeinstallprompt', (e) => {
     console.log('PWA install prompt triggered');
     // Prevent the mini-infobar from appearing on mobile
@@ -73,7 +66,7 @@ if (!isStackBlitzEnvironment()) {
 
 function showInstallPromotion() {
   // Skip install promotion in StackBlitz
-  if (isStackBlitzEnvironment()) {
+  if (window.location.hostname.includes('stackblitz')) {
     return;
   }
   
@@ -194,7 +187,7 @@ function showInstallPromotion() {
 }
 
 // Handle successful installation
-if (!isStackBlitzEnvironment()) {
+if (!window.location.hostname.includes('stackblitz')) {
   window.addEventListener('appinstalled', () => {
     console.log('PWA was installed successfully');
     // Hide any install promotion
