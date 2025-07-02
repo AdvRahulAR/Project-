@@ -18,7 +18,7 @@ root.render(
 );
 
 // Register Service Worker for PWA functionality
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && !window.location.hostname.includes('stackblitz')) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {
@@ -43,23 +43,33 @@ if ('serviceWorker' in navigator) {
         console.error('Service Worker registration failed:', error);
       });
   });
+} else if (window.location.hostname.includes('stackblitz')) {
+  console.log('Service Worker registration skipped: Not supported in StackBlitz environment');
 }
 
 // Handle PWA install prompt
 let deferredPrompt: any;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('PWA install prompt triggered');
-  // Prevent the mini-infobar from appearing on mobile
-  e.preventDefault();
-  // Stash the event so it can be triggered later
-  deferredPrompt = e;
-  
-  // Show custom install button or notification
-  showInstallPromotion();
-});
+// Only handle install prompt if not in StackBlitz
+if (!window.location.hostname.includes('stackblitz')) {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('PWA install prompt triggered');
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    
+    // Show custom install button or notification
+    showInstallPromotion();
+  });
+}
 
 function showInstallPromotion() {
+  // Skip install promotion in StackBlitz
+  if (window.location.hostname.includes('stackblitz')) {
+    return;
+  }
+  
   // Create a subtle install promotion
   const installBanner = document.createElement('div');
   installBanner.id = 'install-banner';
@@ -177,18 +187,21 @@ function showInstallPromotion() {
 }
 
 // Handle successful installation
-window.addEventListener('appinstalled', () => {
-  console.log('PWA was installed successfully');
-  // Hide any install promotion
-  const banner = document.getElementById('install-banner');
-  if (banner) {
-    banner.remove();
-  }
-  deferredPrompt = null;
-});
+if (!window.location.hostname.includes('stackblitz')) {
+  window.addEventListener('appinstalled', () => {
+    console.log('PWA was installed successfully');
+    // Hide any install promotion
+    const banner = document.getElementById('install-banner');
+    if (banner) {
+      banner.remove();
+    }
+    deferredPrompt = null;
+  });
+}
 
 // Check if app is running in standalone mode (installed as PWA)
 if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+  console.log('PWA install prompt triggered');
   console.log('App is running in standalone mode (PWA)');
   // Add any PWA-specific styling or behavior
   document.documentElement.classList.add('pwa-mode');
